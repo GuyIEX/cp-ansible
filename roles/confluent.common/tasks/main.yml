@@ -21,6 +21,37 @@
     state: absent
     regexp: '^Defaults\s+requiretty.*$'
 
+## Enclave stuff: Begin
+- name: Create Confluent Platform install directory
+  file:
+    path: /opt/confluent
+    state: directory
+    mode: 0755
+
+- name: Test for local Confluent Platform archive
+  stat:
+    path: ~/.ansible/pull/{{ inventory_hostname }}/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz
+  register: local_confluent_archive
+
+- name: Copy local Confluent Platform archive to /tmp
+  copy:
+    src: ~/.ansible/pull/{{ inventory_hostname }}/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz
+    dest: /tmp
+  when: local_confluent_archive.stat.exists == True
+
+- name: Download Confluent Platform archive
+  get_url:
+    url: "{{ confluent_common_repository_archive_url }}"
+    dest: "/tmp"
+  when: local_confluent_archive.stat.exists == False
+
+- name: Expand Confluent Platform archive
+  unarchive:
+    src: "/tmp/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz"
+    dest: "/opt/confluent"
+    mode: 0755
+## Enclave stuff: End
+
 - name: Create Jolokia directory
   file:
     path: /opt/jolokia

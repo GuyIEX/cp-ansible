@@ -29,3 +29,6 @@ jmxexporter_jar_url: https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_promet
 
 confluent_cli_download_enabled: "{{rbac_enabled}}"
 confluent_cli_path: /usr/local/bin/confluent
+
+confluent_common_repository_archive_baseurl: "http://packages.confluent.io/archive/{{confluent_repo_version}}"
+confluent_common_repository_archive_url: "{{confluent_common_repository_archive_baseurl}}/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz"

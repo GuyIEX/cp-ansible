@@ -28,6 +28,18 @@
     system: true
     group: "{{zookeeper_group}}"
 
+- name: Test for Zookeeper Service
+  stat:
+    path: "{{zookeeper.systemd_file}}"
+  register: zookeeper_service_systemd
+
+- name: Create Zookeeper Service
+  template:
+    src: confluent-zookeeper.service.j2
+    dest: "{{zookeeper.systemd_file}}"
+    mode: 0644
+  when: zookeeper_service_systemd.stat.exists == false
+
 - include_role:
     name: confluent.ssl
   vars:
@@ -76,6 +88,12 @@
     owner: "{{zookeeper_user}}"
     group: "{{zookeeper_group}}"
 
+- name: Create Zookeeper Config directory
+  file:
+    path: "{{ zookeeper.config_file | dirname }}"
+    state: directory
+    mode: 0755
+
 - name: Create Zookeeper Config
   template:
     src: zookeeper.properties.j2
@@ -93,6 +111,14 @@
     group: "{{zookeeper_group}}"
     owner: "{{zookeeper_user}}"
     mode: 0750
+
+- name: Create log4j Directory
+  file:
+    path: "{{zookeeper.log4j_file | dirname}}"
+    owner: "{{zookeeper_user}}"
+    group: "{{zookeeper_group}}"
+    state: directory
+    mode: 0640
 
 - name: Create Zookeeper log4j config
   template:

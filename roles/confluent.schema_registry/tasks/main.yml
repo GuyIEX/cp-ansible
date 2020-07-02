@@ -29,6 +29,18 @@
     system: true
     group: "{{schema_registry_group}}"
 
+- name: Test for Schema Registry Service
+  stat:
+    path: "{{schema_registry.systemd_file}}"
+  register: schema_registry_service_systemd
+
+- name: Create Schema Registry Service
+  template:
+    src: confluent-schema-registry.service.j2
+    dest: "{{schema_registry.systemd_file}}"
+    mode: 0644
+  when: schema_registry_service_systemd.stat.exists == false
+
 - include_role:
     name: confluent.ssl
   vars:
@@ -58,6 +70,12 @@
   include_tasks: rbac.yml
   when: rbac_enabled|bool
 
+- name: Create Schema Registry Config directory
+  file:
+    path: "{{ schema_registry.config_file | dirname }}"
+    state: directory
+    mode: 0755
+
 - name: Create Schema Registry Config
   template:
     src: schema-registry.properties.j2
@@ -74,6 +92,14 @@
     group: "{{schema_registry_group}}"
     owner: "{{schema_registry_user}}"
     mode: '764'
+
+- name: Create log4j Directory
+  file:
+    path: "{{schema_registry.log4j_file | dirname}}"
+    owner: "{{schema_registry_user}}"
+    group: "{{schema_registry_group}}"
+    state: directory
+    mode: 0640
 
 - name: Create Schema Registry log4j Config
   template:

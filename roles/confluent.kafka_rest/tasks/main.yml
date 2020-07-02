@@ -29,6 +29,18 @@
     system: true
     group: "{{kafka_rest_group}}"
 
+- name: Test for Kafka Rest Service
+  stat:
+    path: "{{kafka_rest.systemd_file}}"
+  register: kafka_rest_service_systemd
+
+- name: Create Kafka Rest Service
+  template:
+    src: confluent-kafka-rest.service.j2
+    dest: "{{kafka_rest.systemd_file}}"
+    mode: 0644
+  when: kafka_rest_service_systemd.stat.exists == false
+
 - include_role:
     name: confluent.ssl
   vars:
@@ -70,6 +82,12 @@
     group: "{{kafka_rest_group}}"
   when: rbac_enabled|bool
 
+- name: Create Kafka Rest Config directory
+  file:
+    path: "{{ kafka_rest.config_file | dirname }}"
+    state: directory
+    mode: 0755
+
 - name: Create Kafka Rest Config
   template:
     src: kafka-rest.properties.j2
@@ -86,6 +104,14 @@
     owner: "{{kafka_rest_user}}"
     group: "{{kafka_rest_group}}"
     mode: '764'
+
+- name: Create log4j Directory
+  file:
+    path: "{{kafka_rest.log4j_file | dirname}}"
+    owner: "{{kafka_rest_user}}"
+    group: "{{kafka_rest_group}}"
+    state: directory
+    mode: 0640
 
 - name: Create Kafka Rest log4j Config
   template:

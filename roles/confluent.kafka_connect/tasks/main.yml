@@ -29,6 +29,18 @@
     system: true
     group: "{{kafka_connect_group}}"
 
+- name: Test for Connect Distributed Service
+  stat:
+    path: "{{kafka_connect.systemd_file}}"
+  register: kafka_connect_service_systemd
+
+- name: Create Connect Distributed Service
+  template:
+    src: confluent-kafka-connect.service.j2
+    dest: "{{kafka_connect.systemd_file}}"
+    mode: 0644
+  when: kafka_connect_service_systemd.stat.exists == false
+
 - include_role:
     name: confluent.ssl
   vars:
@@ -58,6 +70,12 @@
   include_tasks: rbac.yml
   when: rbac_enabled|bool
 
+- name: Create Connect Distributed Config directory
+  file:
+    path: "{{ kafka_connect.config_file | dirname }}"
+    state: directory
+    mode: 0755
+
 - name: Create Connect Distributed Config
   template:
     src: connect-distributed.properties.j2
@@ -77,6 +95,14 @@
     group: "{{kafka_connect_group}}"
     owner: "{{kafka_connect_user}}"
     mode: '764'
+
+- name: Create log4j Directory
+  file:
+    path: "{{kafka_connect.log4j_file | dirname}}"
+    owner: "{{kafka_connect_user}}"
+    group: "{{kafka_connect_group}}"
+    state: directory
+    mode: 0640
 
 - name: Create Connect Distributed log4j Config
   template:

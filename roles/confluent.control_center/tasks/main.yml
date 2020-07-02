@@ -44,6 +44,18 @@
     group: "{{control_center_group}}"
     recurse: true
 
+- name: Test for Control Center Service
+  stat:
+    path: "{{control_center.systemd_file}}"
+  register: control_center_service_systemd
+
+- name: Create Control Center Service
+  template:
+    src: confluent-control-center.service.j2
+    dest: "{{control_center.systemd_file}}"
+    mode: 0644
+  when: control_center_service_systemd.stat.exists == false
+
 - include_role:
     name: confluent.ssl
   vars:
@@ -72,6 +84,12 @@
 - name: Configure RBAC
   include_tasks: rbac.yml
   when: rbac_enabled|bool
+
+- name: Create Control Center Config directory
+  file:
+    path: "{{ control_center.config_file | dirname }}"
+    state: directory
+    mode: 0755
 
 - name: Create Control Center Config
   template:
@@ -112,6 +130,14 @@
     owner: "{{control_center_user}}"
     recurse: true
   when: control_center_rocksdb_path != ""
+
+- name: Create log4j Directory
+  file:
+    path: "{{control_center.log4j_file | dirname}}"
+    owner: "{{control_center_user}}"
+    group: "{{control_center_group}}"
+    state: directory
+    mode: 0640
 
 - name: Create Control Center log4j Config
   template:
