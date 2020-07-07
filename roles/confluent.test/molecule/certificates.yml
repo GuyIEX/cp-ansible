@@ -11,6 +11,8 @@
         - rsync
         - java-1.8.0-openjdk
       when: ansible_os_family == "RedHat"
+      tags:
+        - autoinstall
 
     - name: Install OpenSSL Rsync and Java
       apt:
@@ -21,6 +23,8 @@
         - rsync
         - openjdk-8-jdk
       when: ansible_os_family == "Debian"
+      tags:
+        - autoinstall
 
     - name: Create SSL Certificate Generation Directory
       file:

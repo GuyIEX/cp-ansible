@@ -7,6 +7,8 @@
     - openssl
     - rsync
   when: ansible_os_family == "RedHat"
+  tags:
+    - autoinstall
 
 - name: Install OpenSSL and Rsync - Debian
   apt:
@@ -16,6 +18,8 @@
     - openssl
     - rsync
   when: ansible_os_family == "Debian"
+  tags:
+    - autoinstall
 
 - name: Create SSL Certificate Generation Directory
   file:

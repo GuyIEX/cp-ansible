@@ -6,6 +6,8 @@
     state: restarted
     when:
       - skip_restart_handlers | default("false") == "false"
+  tags:
+    - systemd
 
 - name: Zookeeper Health Check
   include: health_check.yml

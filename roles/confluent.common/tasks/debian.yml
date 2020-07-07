@@ -3,18 +3,24 @@
   shell: apt-get install apt-transport-https -y --force-yes
   args:
     warn: false
+  tags:
+    - autoinstall
 
 - name: Add Confluent Apt Key
   apt_key:
     url: "{{confluent_common_repository_debian_key_url}}"
     state: present
   when: not custom_apt_repo|bool
+  tags:
+    - autoinstall
 
 - name: Add Confluent Apt Repo
   apt_repository:
     repo: "{{confluent_common_repository_debian_repository}}"
     state: present
   when: not custom_apt_repo|bool
+  tags:
+    - autoinstall
 
 - name: Add Custom Apt Repo
   copy:
@@ -23,6 +29,8 @@
   when: custom_apt_repo|bool
   notify:
     - apt-get update
+  tags:
+    - autoinstall
 
 - meta: flush_handlers
 
@@ -71,6 +79,8 @@
     - install_java|bool
     - not custom_apt_repo|bool
     - ansible_distribution_release == "jessie"
+  tags:
+    - autoinstall
 
 - name: Install Java - stretch
   apt:
@@ -81,6 +91,8 @@
     - install_java|bool
     - not custom_apt_repo|bool
     - ansible_distribution_release == "stretch"
+  tags:
+    - autoinstall
 
 - name: Install Java (Custom Repo)
   apt:
@@ -89,6 +101,8 @@
   when:
     - install_java|bool
     - custom_apt_repo|bool
+  tags:
+    - autoinstall
 
 - name: Install rsync, ca-certificates, openssl, unzip
   apt:
@@ -99,3 +113,5 @@
     - openssl
     - unzip
     - curl
+  tags:
+    - autoinstall

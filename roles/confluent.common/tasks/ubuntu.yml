@@ -4,12 +4,16 @@
     url: "{{confluent_common_repository_debian_key_url}}"
     state: present
   when: not custom_apt_repo|bool
+  tags:
+    - autoinstall
 
 - name: Add Confluent Apt Repo
   apt_repository:
     repo: "{{confluent_common_repository_debian_repository}}"
     state: present
   when: not custom_apt_repo|bool
+  tags:
+    - autoinstall
 
 - name: Add Custom Apt Repo
   copy:
@@ -27,11 +31,15 @@
   when:
     - not custom_apt_repo|bool
     - install_java|bool
+  tags:
+    - autoinstall
 
 - name: Install Java
   apt:
     name: "{{ubuntu_java_package_name}}"
   when: install_java|bool
+  tags:
+    - autoinstall
 
 - name: Install OpenSSL
   apt:
@@ -39,3 +47,5 @@
   loop:
     - openssl
     - unzip
+  tags:
+    - autoinstall

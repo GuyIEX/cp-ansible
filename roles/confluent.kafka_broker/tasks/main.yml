@@ -9,12 +9,16 @@
     state: latest
   loop: "{{kafka_broker_packages}}"
   when: ansible_os_family == "RedHat"
+  tags:
+    - autoinstall
 
 - name: Install the Kafka Broker Packages
   apt:
     name: "{{item}}{{confluent_package_debian_suffix}}"
   loop: "{{kafka_broker_packages}}"
   when: ansible_os_family == "Debian"
+  tags:
+    - autoinstall
 
 - name: Kafka Broker group
   group:
@@ -201,6 +205,8 @@
     name: "{{kafka_broker_service_name}}"
     enabled: true
     state: started
+  tags:
+    - systemd
 
 - name: Wait for Under Replicated Partitions on Broker
   include_tasks: ../../tasks/wait_for_urp.yml

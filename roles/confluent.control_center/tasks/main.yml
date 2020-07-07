@@ -10,12 +10,16 @@
     state: latest
   loop: "{{control_center_packages}}"
   when: ansible_os_family == "RedHat"
+  tags:
+    - autoinstall
 
 - name: Install the Control Center Packages
   apt:
     name: "{{item}}{{confluent_package_debian_suffix}}"
   loop: "{{control_center_packages}}"
   when: ansible_os_family == "Debian"
+  tags:
+    - autoinstall
 
 # Configure environment
 - name: Create Control Center Group
@@ -177,6 +181,8 @@
     name: "{{control_center_service_name}}"
     enabled: true
     state: started
+  tags:
+    - systemd
 
 - name: Health Check
   include_tasks: health_check.yml

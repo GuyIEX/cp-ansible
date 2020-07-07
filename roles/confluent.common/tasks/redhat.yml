@@ -10,6 +10,8 @@
     enabled: "{{confluent_common_repository_redhat_dist_enabled}}"
   notify: yum-clean-all
   when: not custom_yum_repofile|bool
+  tags:
+    - autoinstall
 
 - name: Add Confluent Yum Repo
   yum_repository:
@@ -22,6 +24,8 @@
     enabled: "{{confluent_common_repository_redhat_main_enabled}}"
   notify: yum-clean-all
   when: not custom_yum_repofile|bool
+  tags:
+    - autoinstall
 
 - name: Add Custom Repo file
   copy:
@@ -36,6 +40,8 @@
     name: "{{redhat_java_package_name}}"
     state: present
   when: install_java|bool
+  tags:
+    - autoinstall
 
 - name: Install OpenSSL
   yum:
@@ -43,3 +49,5 @@
   loop:
     - openssl
     - unzip
+  tags:
+    - autoinstall

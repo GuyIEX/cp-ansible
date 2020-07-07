@@ -11,6 +11,8 @@
     state: restarted
     when:
       - skip_restart_handlers | default("false") == "false"
+  tags:
+    - systemd
 
 - name: Wait for URP
   include_tasks: tasks/wait_for_urp.yml

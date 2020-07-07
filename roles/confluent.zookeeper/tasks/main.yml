@@ -9,12 +9,16 @@
     state: latest
   loop: "{{zookeeper_packages}}"
   when: ansible_os_family == "RedHat"
+  tags:
+    - autoinstall
 
 - name: Install the Zookeeper Packages
   apt:
     name: "{{item}}{{confluent_package_debian_suffix}}"
   loop: "{{zookeeper_packages}}"
   when: ansible_os_family == "Debian"
+  tags:
+    - autoinstall
 
 # Configure environment
 - name: Create Zookeeper Group
