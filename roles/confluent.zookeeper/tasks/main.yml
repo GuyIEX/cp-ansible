@@ -177,6 +177,8 @@
     name: "{{zookeeper_service_name}}"
     enabled: true
     state: started
+  tags:
+    - systemd
 
 - name: Zookeeper Health Check
   include: health_check.yml

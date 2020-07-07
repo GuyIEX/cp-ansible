@@ -4,6 +4,8 @@
     daemon_reload: true
     name: "{{kafka_broker_service_name}}"
     state: restarted
+    when:
+      - skip_restart_handlers | default("false") == "false"
 
 - name: Wait for Under Replicated Partitions on Broker
   include_tasks: ../../tasks/wait_for_urp.yml

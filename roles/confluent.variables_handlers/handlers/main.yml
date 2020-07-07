@@ -1,12 +1,16 @@
 ---
 - name: load sysctl
   command: sysctl -p
+  tags:
+    - sysctl
 
 - name: Restart Kafka
   systemd:
     daemon_reload: true
     name: "{{kafka_broker_service_name}}"
     state: restarted
+    when:
+      - skip_restart_handlers | default("false") == "false"
 
 - name: Wait for URP
   include_tasks: tasks/wait_for_urp.yml

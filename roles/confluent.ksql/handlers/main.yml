@@ -4,3 +4,5 @@
     daemon_reload: true
     name: "{{ksql_service_name}}"
     state: restarted
+    when:
+      - skip_restart_handlers | default("false") == "false"

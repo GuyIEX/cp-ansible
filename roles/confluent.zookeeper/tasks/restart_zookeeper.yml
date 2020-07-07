@@ -3,6 +3,8 @@
   shell: "systemctl show -p SubState {{zookeeper_service_name}}"
   changed_when: false
   register: substate
+  when:
+    - skip_restart_handlers | default("false") == "false"
 
 # All zookeeper hosts iterate over the list of zookeeper hosts, each seeing the list in the same order
 # At one given loop entry, only one host will have its inventory_hostname match  the entry in the loop
@@ -14,7 +16,10 @@
   when:
     - "hostvars[item].inventory_hostname == inventory_hostname"
     - substate.stdout == 'SubState=running'
+    - skip_restart_handlers | default("false") == "false"
 
 - name: Restart Zookeeper in Parallel
   include: restart.yml
-  when: substate.stdout != 'SubState=running'
+  when:
+    - substate.stdout != 'SubState=running'
+    - skip_restart_handlers | default("false") == "false"

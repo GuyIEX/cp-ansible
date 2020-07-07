@@ -1,3 +1,5 @@
 ---
 - name: restart zookeeper
   include_tasks: tasks/restart_zookeeper.yml
+  when:
+    - skip_restart_handlers | default("false") == "false"
