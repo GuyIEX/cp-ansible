@@ -20,6 +20,8 @@
     path: /etc/sudoers
     state: absent
     regexp: '^Defaults\s+requiretty.*$'
+  tags:
+    - sudo
 
 ## Enclave stuff: Begin
 - name: Create Confluent Platform install directory
