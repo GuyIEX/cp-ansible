@@ -53,11 +53,12 @@
     dest: "/opt/confluent"
     mode: 0755
 
-- name: Create Confluent Platform logs directory
-  file:
-    path: "/opt/confluent/confluent-{{confluent_archive_version}}/logs"
-    state: directory
-    mode: 777
+# What user/group should be used here?
+# - name: Create Confluent Platform logs directory
+#   file:
+#     path: "/opt/confluent/confluent-{{confluent_archive_version}}/logs"
+#     state: directory
+#     mode: 777
 ## Enclave stuff: End
 
 - name: Create Jolokia directory
