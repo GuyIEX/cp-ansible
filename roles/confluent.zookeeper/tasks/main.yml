@@ -97,6 +97,8 @@
     path: "{{ zookeeper.config_file | dirname }}"
     state: directory
     mode: 0755
+    owner: "{{zookeeper_user}}"
+    group: "{{zookeeper_group}}"
 
 - name: Create Zookeeper Config
   template:
@@ -122,7 +124,7 @@
     owner: "{{zookeeper_user}}"
     group: "{{zookeeper_group}}"
     state: directory
-    mode: 0640
+    mode: 0755
 
 - name: Create Zookeeper log4j config
   template:
