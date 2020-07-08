@@ -4,7 +4,7 @@
     daemon_reload: true
     name: "{{control_center_service_name}}"
     state: restarted
-    when:
-      - skip_restart_handlers | default("false") == "false"
+  when:
+    - skip_restart_handlers | default("false") == "false"
   tags:
     - systemd
