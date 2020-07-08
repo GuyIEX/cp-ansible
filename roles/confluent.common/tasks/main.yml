@@ -32,12 +32,12 @@
 
 - name: Test for local Confluent Platform archive
   stat:
-    path: ~/.ansible/pull/{{ inventory_hostname }}/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz
+    path: "{{ confluent_archive_path }}"
   register: local_confluent_archive
 
 - name: Copy local Confluent Platform archive to /tmp
   copy:
-    src: ~/.ansible/pull/{{ inventory_hostname }}/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz
+    src: "{{ confluent_archive_path }}"
     dest: /tmp
   when: local_confluent_archive.stat.exists == True
 
@@ -52,6 +52,12 @@
     src: "/tmp/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz"
     dest: "/opt/confluent"
     mode: 0755
+
+- name: Create Confluent Platform logs directory
+  file:
+    path: "/opt/confluent/confluent-{{confluent_archive_version}}/logs"
+    state: directory
+    mode: 777
 ## Enclave stuff: End
 
 - name: Create Jolokia directory
