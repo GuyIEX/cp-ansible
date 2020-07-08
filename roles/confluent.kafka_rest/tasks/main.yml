@@ -91,6 +91,8 @@
     path: "{{ kafka_rest.config_file | dirname }}"
     state: directory
     mode: 0755
+    owner: "{{kafka_rest_user}}"
+    group: "{{kafka_rest_group}}"
 
 - name: Create Kafka Rest Config
   template:
@@ -115,7 +117,7 @@
     owner: "{{kafka_rest_user}}"
     group: "{{kafka_rest_group}}"
     state: directory
-    mode: 0640
+    mode: 0755
 
 - name: Create Kafka Rest log4j Config
   template:

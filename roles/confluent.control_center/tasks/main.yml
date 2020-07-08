@@ -94,6 +94,8 @@
     path: "{{ control_center.config_file | dirname }}"
     state: directory
     mode: 0755
+    owner: "{{control_center_user}}"
+    group: "{{control_center_group}}"
 
 - name: Create Control Center Config
   template:
@@ -141,7 +143,7 @@
     owner: "{{control_center_user}}"
     group: "{{control_center_group}}"
     state: directory
-    mode: 0640
+    mode: 0755
 
 - name: Create Control Center log4j Config
   template:

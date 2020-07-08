@@ -79,6 +79,8 @@
     path: "{{ kafka_connect.config_file | dirname }}"
     state: directory
     mode: 0755
+    owner: "{{kafka_connect_user}}"
+    group: "{{kafka_connect_group}}"
 
 - name: Create Connect Distributed Config
   template:
@@ -106,7 +108,7 @@
     owner: "{{kafka_connect_user}}"
     group: "{{kafka_connect_group}}"
     state: directory
-    mode: 0640
+    mode: 0755
 
 - name: Create Connect Distributed log4j Config
   template:

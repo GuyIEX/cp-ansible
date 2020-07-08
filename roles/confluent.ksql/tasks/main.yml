@@ -87,6 +87,8 @@
     path: "{{ ksql.config_file | dirname }}"
     state: directory
     mode: 0755
+    owner: "{{ksql_user}}"
+    group: "{{ksql_group}}"
 
 - name: Create Ksql Config
   template:
@@ -112,7 +114,7 @@
     owner: "{{ksql_user}}"
     group: "{{ksql_group}}"
     state: directory
-    mode: 0640
+    mode: 0755
 
 - name: Create Ksql log4j Config
   template:

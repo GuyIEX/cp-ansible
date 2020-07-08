@@ -79,6 +79,8 @@
     path: "{{ schema_registry.config_file | dirname }}"
     state: directory
     mode: 0755
+    owner: "{{schema_registry_user}}"
+    group: "{{schema_registry_group}}"
 
 - name: Create Schema Registry Config
   template:
@@ -103,7 +105,7 @@
     owner: "{{schema_registry_user}}"
     group: "{{schema_registry_group}}"
     state: directory
-    mode: 0640
+    mode: 0755
 
 - name: Create Schema Registry log4j Config
   template:
