@@ -38,6 +38,7 @@
 - name: Copy local Confluent Platform archive to /tmp
   copy:
     src: "{{ confluent_archive_path }}"
+    remote_src: yes
     dest: /tmp
   when: local_confluent_archive.stat.exists == True
 
@@ -50,6 +51,7 @@
 - name: Expand Confluent Platform archive
   unarchive:
     src: "/tmp/confluent-{{confluent_archive_version}}-{{confluent_archive_scala_version}}.tar.gz"
+    remote_src: yes
     dest: "/opt/confluent"
     mode: 0755
 
